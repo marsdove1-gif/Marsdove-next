@@ -3,20 +3,15 @@
 import type { ReactElement, ReactNode } from "react";
 import { cloneElement } from "react";
 
-import {
+import type {
   Control,
   FieldPath,
   FieldValues,
 } from "react-hook-form";
 
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Controller,
+} from "react-hook-form";
 
 type FieldProps<
   TFieldValues extends FieldValues,
@@ -40,32 +35,50 @@ export default function Field<
   children,
 }: FieldProps<TFieldValues, TName>) {
   return (
-    <FormField
+    <Controller
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
+      render={({ field, fieldState }) => (
+        <div className="space-y-2">
           {label && (
-            <FormLabel>
+            <label
+              htmlFor={name}
+              className="text-sm font-medium"
+            >
               {label}
-            </FormLabel>
+            </label>
           )}
 
-          <FormControl>
-            {cloneElement(children, {
-              ...field,
-            })}
-          </FormControl>
+          {cloneElement(children, {
+            ...field,
+            id: name,
+            "aria-invalid": fieldState.invalid,
+            "aria-describedby": description
+              ? `${name}-description`
+              : undefined,
+          })}
 
           {description && (
-            <FormDescription>
+            <p
+              id={`${name}-description`}
+              className="text-sm text-muted-foreground"
+            >
               {description}
-            </FormDescription>
+            </p>
           )}
 
-          <FormMessage />
-        </FormItem>
+          {fieldState.error?.message && (
+            <p
+              role="alert"
+              className="text-sm text-destructive"
+            >
+              {fieldState.error.message}
+            </p>
+          )}
+        </div>
       )}
     />
   );
 }
+
+
