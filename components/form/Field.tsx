@@ -1,17 +1,30 @@
 "use client";
 
-import type { ReactElement, ReactNode } from "react";
-import { cloneElement } from "react";
-
-import type {
-  Control,
-  FieldPath,
-  FieldValues,
-} from "react-hook-form";
+import {
+  cloneElement,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 
 import {
   Controller,
+  type Control,
+  type FieldPath,
+  type FieldValues,
 } from "react-hook-form";
+
+type FieldElementProps = {
+  id?: string;
+  name?: string;
+  value?: unknown;
+  defaultValue?: unknown;
+  onChange?: (...args: any[]) => void;
+  onBlur?: (...args: any[]) => void;
+  ref?: unknown;
+  disabled?: boolean;
+  "aria-invalid"?: boolean;
+  "aria-describedby"?: string;
+};
 
 type FieldProps<
   TFieldValues extends FieldValues,
@@ -21,7 +34,7 @@ type FieldProps<
   name: TName;
   label?: ReactNode;
   description?: ReactNode;
-  children: ReactElement;
+  children: ReactElement<FieldElementProps>;
 };
 
 export default function Field<
@@ -80,5 +93,3 @@ export default function Field<
     />
   );
 }
-
-
